@@ -35,4 +35,13 @@ public class CategoryService {
     public Optional<Category> getCategoryById(Long id) {
         return categoryRepository.findById(id);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public Category createCategory(String name) {
+        Category category = new Category();
+        category.setName(name);
+
+        return categoryRepository.save(category);
+    }
 }
