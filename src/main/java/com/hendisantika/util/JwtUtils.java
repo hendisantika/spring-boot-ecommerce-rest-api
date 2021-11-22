@@ -1,5 +1,6 @@
 package com.hendisantika.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -37,5 +38,12 @@ public class JwtUtils {
                         .compact();
 
         return TOKEN_PREFIX + " " + jwtToken;
+    }
+
+    private static Claims parseToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(TOKEN_SECRET_KEY)
+                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                .getBody();
     }
 }
