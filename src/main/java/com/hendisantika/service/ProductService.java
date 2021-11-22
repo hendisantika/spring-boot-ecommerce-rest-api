@@ -101,4 +101,10 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #product.getUser().getId()")
+    @Transactional
+    public void removeCategory(Product product, Category category) {
+        product.getCategories().remove(category);
+        productRepository.save(product);
+    }
 }
