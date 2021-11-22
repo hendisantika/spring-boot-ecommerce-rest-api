@@ -1,5 +1,6 @@
 package com.hendisantika.service;
 
+import com.hendisantika.entity.Category;
 import com.hendisantika.entity.Product;
 import com.hendisantika.repository.ProductRepository;
 import com.hendisantika.util.CurrencyExchangeCommand;
@@ -31,5 +32,11 @@ public class ProductService {
     @Transactional
     public Page<Product> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public Page<Product> getAllProducts(Category category, Pageable page) {
+        return productRepository.findByAssociatedWithCategory(category.getId(), page);
     }
 }
