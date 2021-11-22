@@ -44,4 +44,11 @@ public class CategoryService {
 
         return categoryRepository.save(category);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public void updateCategory(Category category, String name) {
+        category.setName(name);
+        categoryRepository.save(category);
+    }
 }
