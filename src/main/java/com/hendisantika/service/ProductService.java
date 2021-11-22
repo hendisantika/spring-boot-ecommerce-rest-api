@@ -66,4 +66,20 @@ public class ProductService {
 
         return productRepository.save(product);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #product.getUser().getId()")
+    @Transactional
+    public void updateProduct(Product product, String name, String currency, double price) {
+        if (!Product.CURRENCY.equals(currency)) {
+            price = currencyExchangeCommand.convert(currency, Product.CURRENCY, price);
+        }
+
+        // Round up only 2 decimals...
+        price = (double) Math.round(price * 100) / 100;
+
+        product.setName(name);
+        product.setPrice(price);
+        productRepository.save(product);
+    }
+
 }
