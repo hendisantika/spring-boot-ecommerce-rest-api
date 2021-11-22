@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,5 +28,11 @@ public class CategoryService {
     @Transactional
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public Optional<Category> getCategoryById(Long id) {
+        return categoryRepository.findById(id);
     }
 }
