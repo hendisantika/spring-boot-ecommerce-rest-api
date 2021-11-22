@@ -2,6 +2,7 @@ package com.hendisantika.service;
 
 import com.hendisantika.entity.Category;
 import com.hendisantika.entity.Product;
+import com.hendisantika.entity.User;
 import com.hendisantika.repository.ProductRepository;
 import com.hendisantika.util.CurrencyExchangeCommand;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,23 @@ public class ProductService {
     @Transactional
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public Product createProduct(String name, String currency, double price, User user) {
+        if (!Product.CURRENCY.equals(currency)) {
+            price = currencyExchangeCommand.convert(currency, Product.CURRENCY, price);
+        }
+
+        // Round up only 2 decimals...
+        price = (double) Math.round(price * 100) / 100;
+
+        Product product = new Product();
+        product.setName(name);
+        product.setPrice(price);
+        product.setUser(user);
+
+        return productRepository.save(product);
     }
 }
