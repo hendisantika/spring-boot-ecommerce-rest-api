@@ -63,4 +63,11 @@ public class CategoryService {
     public boolean isChildCategory(Category category, Category parent) {
         return category.getParent().equals(parent);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public void addChildCategory(Category category, Category parent) {
+        category.setParent(parent);
+        categoryRepository.save(category);
+    }
 }
