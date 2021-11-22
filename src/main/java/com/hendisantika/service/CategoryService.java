@@ -70,4 +70,12 @@ public class CategoryService {
         category.setParent(parent);
         categoryRepository.save(category);
     }
+
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public void removeChildCategory(Category category, Category parent) {
+        category.setParent(null);
+        categoryRepository.save(category);
+    }
 }
