@@ -94,4 +94,11 @@ public class ProductService {
         return product.getCategories().contains(category);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #product.getUser().getId()")
+    @Transactional
+    public void addCategory(Product product, Category category) {
+        product.getCategories().add(category);
+        productRepository.save(product);
+    }
+
 }
