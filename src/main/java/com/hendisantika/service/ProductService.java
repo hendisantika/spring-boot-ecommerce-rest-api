@@ -107,4 +107,10 @@ public class ProductService {
         product.getCategories().remove(category);
         productRepository.save(product);
     }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public boolean hasProductsAssociated(Category category) {
+        return productRepository.countByAssociatedWithCategory(category.getId()) > 0;
+    }
 }
