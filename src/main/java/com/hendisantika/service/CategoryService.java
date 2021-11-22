@@ -51,4 +51,10 @@ public class CategoryService {
         category.setName(name);
         categoryRepository.save(category);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public void deleteCategory(Category category) {
+        categoryRepository.delete(category);
+    }
 }
