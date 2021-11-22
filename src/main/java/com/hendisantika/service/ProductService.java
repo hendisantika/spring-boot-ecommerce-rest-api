@@ -87,4 +87,11 @@ public class ProductService {
     public void deleteProduct(Product product) {
         productRepository.delete(product);
     }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public boolean hasCategory(Product product, Category category) {
+        return product.getCategories().contains(category);
+    }
+
 }
