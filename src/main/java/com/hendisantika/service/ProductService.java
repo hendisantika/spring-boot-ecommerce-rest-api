@@ -1,9 +1,14 @@
 package com.hendisantika.service;
 
+import com.hendisantika.entity.Product;
 import com.hendisantika.repository.ProductRepository;
 import com.hendisantika.util.CurrencyExchangeCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,4 +26,10 @@ public class ProductService {
 
     @Autowired
     private CurrencyExchangeCommand currencyExchangeCommand;
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
 }
