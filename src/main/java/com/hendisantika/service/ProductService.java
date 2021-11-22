@@ -82,4 +82,9 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #product.getUser().getId()")
+    @Transactional
+    public void deleteProduct(Product product) {
+        productRepository.delete(product);
+    }
 }
