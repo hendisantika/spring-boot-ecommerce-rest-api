@@ -57,4 +57,10 @@ public class CategoryService {
     public void deleteCategory(Category category) {
         categoryRepository.delete(category);
     }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public boolean isChildCategory(Category category, Category parent) {
+        return category.getParent().equals(parent);
+    }
 }
