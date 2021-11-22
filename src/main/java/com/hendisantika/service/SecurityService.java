@@ -2,6 +2,7 @@ package com.hendisantika.service;
 
 import com.hendisantika.entity.User;
 import com.hendisantika.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,4 +42,19 @@ public class SecurityService {
         return JwtUtils.generateToken(user.getId(), user.getUsername(), user.getRole());
     }
 
+    @Transactional
+    public void authenticate(final String token) {
+        final Claims claims = JwtUtils.parseToken(token);
+
+        User user = new User();
+        user.setId(Long.parseLong(claims.getSubject()));
+        user.setPassword("");
+        user.setUsername(claims.get(JwtUtils.TOKEN_CLAIM_USERNAME).toString());
+        user.setRole(claims.get(JwtUtils.TOKEN_CLAIM_ROLES).toString());
+
+        // Setting up Authentication...
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
+        );
+    }
 }
