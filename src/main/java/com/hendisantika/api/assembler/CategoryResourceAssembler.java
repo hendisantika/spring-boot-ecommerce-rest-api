@@ -1,6 +1,7 @@
 package com.hendisantika.api.assembler;
 
 import com.hendisantika.api.controller.CategoryController;
+import com.hendisantika.api.controller.CategoryProductsController;
 import com.hendisantika.api.resource.CategoryResource;
 import com.hendisantika.entity.Category;
 import com.hendisantika.service.ProductService;
@@ -29,12 +30,12 @@ public class CategoryResourceAssembler extends RepresentationModelAssemblerSuppo
     }
 
     @Override
-    protected CategoryResource instantiateResource(Category entity) {
+    protected CategoryResource instantiateModel(Category entity) {
         return new CategoryResource(entity.getName());
     }
 
     @Override
-    public CategoryResource toResource(Category entity) {
+    public CategoryResource toModel(Category entity) {
         CategoryResource resource = createResourceWithId(entity.getId(), entity);
         if (entity.getParent() != null) {
             resource.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CategoryController.class).retrieveCategory(entity.getParent().getId())).withRel("parent"));

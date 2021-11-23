@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public class ProductResource extends RepresentationModel {
+public class ProductResource extends RepresentationModel<ProductResource> {
 
     private final String name;
     private final String currency;

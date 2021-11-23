@@ -1,5 +1,6 @@
 package com.hendisantika.api.assembler;
 
+import com.hendisantika.api.controller.ProductController;
 import com.hendisantika.api.resource.ProductResource;
 import com.hendisantika.entity.Product;
 import io.jsonwebtoken.lang.Collections;
@@ -27,7 +28,7 @@ public class ProductResourceAssembler extends RepresentationModelAssemblerSuppor
     }
 
     @Override
-    protected ProductResource instantiateResource(Product entity) {
+    protected ProductResource instantiateModel(Product entity) {
         return new ProductResource(
                 entity.getName(),
                 Product.CURRENCY,
@@ -39,7 +40,7 @@ public class ProductResourceAssembler extends RepresentationModelAssemblerSuppor
     }
 
     @Override
-    public ProductResource toResource(Product entity) {
+    public ProductResource toModel(Product entity) {
         return createResourceWithId(entity.getId(), entity);
     }
 }
