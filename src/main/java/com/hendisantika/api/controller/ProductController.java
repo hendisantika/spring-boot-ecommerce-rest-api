@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -86,5 +87,17 @@ public class ProductController {
         productService.updateProduct(product, request.getName(), request.getCurrency(), request.getPrice());
 
         return ResponseEntity.ok(productResourceAssembler.toResource(product));
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        // Getting the requiring product; or throwing exception if not found
+        final Product product = productService.getProductById(id)
+                .orElseThrow(() -> new NotFoundException("product"));
+
+        // Deleting product from the application...
+        productService.deleteProduct(product);
+
+        return ResponseEntity.noContent().build();
     }
 }
