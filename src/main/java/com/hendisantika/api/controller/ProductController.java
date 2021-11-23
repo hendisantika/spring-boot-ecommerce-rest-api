@@ -54,7 +54,7 @@ public class ProductController {
         // Getting all products in application...
         final Page<Product> products = productService.getAllProducts(pageable);
 
-        return ResponseEntity.ok(pagedResourcesAssembler.toResource(products, productResourceAssembler));
+        return ResponseEntity.ok(pagedResourcesAssembler.toModel(products, productResourceAssembler));
     }
 
     @GetMapping(path = "/{id}")
@@ -63,7 +63,7 @@ public class ProductController {
         final Product product = productService.getProductById(id)
                 .orElseThrow(() -> new NotFoundException("product"));
 
-        return ResponseEntity.ok(productResourceAssembler.toResource(product));
+        return ResponseEntity.ok(productResourceAssembler.toModel(product));
     }
 
     @PostMapping
@@ -74,7 +74,7 @@ public class ProductController {
         final Product product = productService.createProduct(request.getName(), request.getCurrency(),
                 request.getPrice(), user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productResourceAssembler.toResource(product));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productResourceAssembler.toModel(product));
     }
 
     @PutMapping(path = "/{id}")
@@ -86,7 +86,7 @@ public class ProductController {
         // Updating a product in the application...
         productService.updateProduct(product, request.getName(), request.getCurrency(), request.getPrice());
 
-        return ResponseEntity.ok(productResourceAssembler.toResource(product));
+        return ResponseEntity.ok(productResourceAssembler.toModel(product));
     }
 
     @DeleteMapping(path = "/{id}")
