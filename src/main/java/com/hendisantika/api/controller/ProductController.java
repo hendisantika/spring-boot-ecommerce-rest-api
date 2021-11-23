@@ -5,7 +5,11 @@ import com.hendisantika.entity.Product;
 import com.hendisantika.service.ProductService;
 import com.hendisantika.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +37,13 @@ public class ProductController {
 
     @Autowired
     private PagedResourcesAssembler<Product> pagedResourcesAssembler;
+
+    @GetMapping
+    public ResponseEntity<?> retrieveAllProducts(Pageable pageable) {
+        // Getting all products in application...
+        final Page<Product> products = productService.getAllProducts(pageable);
+
+        return ResponseEntity.ok(pagedResourcesAssembler.toResource(products, productResourceAssembler));
+    }
 
 }
