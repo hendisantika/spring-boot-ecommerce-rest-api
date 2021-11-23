@@ -8,6 +8,7 @@ import com.hendisantika.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,4 +75,17 @@ public class CategoryController {
 
         return ResponseEntity.ok(categoryResourceAssembler.toResource(category));
     }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        // Getting the requiring category; or throwing exception if not found
+        final Category category = categoryService.getCategoryById(id)
+                .orElseThrow(() -> new NotFoundException("category"));
+
+        // Deleting category from the application...
+        categoryService.deleteCategory(category);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
