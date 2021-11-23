@@ -5,9 +5,11 @@ import com.hendisantika.entity.Category;
 import com.hendisantika.exception.NotFoundException;
 import com.hendisantika.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,5 +44,26 @@ public class CategorySubcategoriesController {
         final Set<Category> subcategories = parent.getChildCategories();
 
         return ResponseEntity.ok(categoryResourceAssembler.toModel(subcategories));
+    }
+
+    @PostMapping(path = "/{childid}")
+    public ResponseEntity<?> addSubcategory(@PathVariable Long parentid, @PathVariable Long childid) {
+        // Getting the requiring category; or throwing exception if not found
+        final Category parent = categoryService.getCategoryById(parentid)
+                .orElseThrow(() -> new NotFoundException("parent category"));
+
+        // Getting the requiring category; or throwing exception if not found
+        final Category child = categoryService.getCategoryById(childid)
+                .orElseThrow(() -> new NotFoundException("child category"));
+
+        // Validating if association does not exist...
+        if (categoryService.isChildCategory(child, parent)) {
+            throw new IllegalArgumentException("category " + parent.getId() + " already contains subcategory " + child.getId());
+        }
+
+        // Associating parent with subcategory...
+        categoryService.addChildCategory(child, parent);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryResourceAssembler.toModel(parent));
     }
 }
