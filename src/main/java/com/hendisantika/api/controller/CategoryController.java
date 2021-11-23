@@ -2,10 +2,12 @@ package com.hendisantika.api.controller;
 
 import com.hendisantika.api.assembler.CategoryResourceAssembler;
 import com.hendisantika.entity.Category;
+import com.hendisantika.exception.NotFoundException;
 import com.hendisantika.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +38,14 @@ public class CategoryController {
         final List<Category> categories = categoryService.getAllCategories();
 
         return ResponseEntity.ok(categoryResourceAssembler.toResources(categories));
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<?> retrieveCategory(@PathVariable Long id) {
+        // Getting the requiring category; or throwing exception if not found
+        final Category category = categoryService.getCategoryById(id)
+                .orElseThrow(() -> new NotFoundException("category"));
+
+        return ResponseEntity.ok(categoryResourceAssembler.toResource(category));
     }
 }
