@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -74,5 +75,26 @@ public class CategoryProductsController {
         productService.addCategory(product, category);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productResourceAssembler.toModel(product));
+    }
+
+    @RequestMapping(path = "/{productid}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeProduct(@PathVariable Long categoryid, @PathVariable Long productid) {
+        // Getting the requiring category; or throwing exception if not found
+        final Category category = categoryService.getCategoryById(categoryid)
+                .orElseThrow(() -> new NotFoundException("category"));
+
+        // Getting the requiring product; or throwing exception if not found
+        final Product product = productService.getProductById(productid)
+                .orElseThrow(() -> new NotFoundException("product"));
+
+        // Validating if association does not exist...
+        if (!productService.hasCategory(product, category)) {
+            throw new IllegalArgumentException("product " + product.getId() + " does not contain category " + category.getId());
+        }
+
+        // Dis-associating product with category...
+        productService.removeCategory(product, category);
+
+        return ResponseEntity.noContent().build();
     }
 }
