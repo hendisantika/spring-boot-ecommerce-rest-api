@@ -1,6 +1,7 @@
 package com.hendisantika.api.controller;
 
 import com.hendisantika.api.assembler.ProductResourceAssembler;
+import com.hendisantika.dto.ProductDto;
 import com.hendisantika.entity.Product;
 import com.hendisantika.entity.User;
 import com.hendisantika.exception.NotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,5 +74,17 @@ public class ProductController {
                 request.getPrice(), user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productResourceAssembler.toResource(product));
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductDto request) {
+        // Getting the requiring product; or throwing exception if not found
+        final Product product = productService.getProductById(id)
+                .orElseThrow(() -> new NotFoundException("product"));
+
+        // Updating a product in the application...
+        productService.updateProduct(product, request.getName(), request.getCurrency(), request.getPrice());
+
+        return ResponseEntity.ok(productResourceAssembler.toResource(product));
     }
 }
