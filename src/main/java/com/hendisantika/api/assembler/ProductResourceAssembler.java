@@ -2,6 +2,7 @@ package com.hendisantika.api.assembler;
 
 import com.hendisantika.api.resource.ProductResource;
 import com.hendisantika.entity.Product;
+import io.jsonwebtoken.lang.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -23,5 +24,22 @@ public class ProductResourceAssembler extends RepresentationModelAssemblerSuppor
 
     public ProductResourceAssembler() {
         super(ProductController.class, ProductResource.class);
+    }
+
+    @Override
+    protected ProductResource instantiateResource(Product entity) {
+        return new ProductResource(
+                entity.getName(),
+                Product.CURRENCY,
+                entity.getPrice(),
+                !Collections.isEmpty(entity.getCategories()) ?
+                        categoryResourceAssembler.toResources(entity.getCategories()) : null,
+                entity.getUser().getUsername()
+        );
+    }
+
+    @Override
+    public ProductResource toResource(Product entity) {
+        return createResourceWithId(entity.getId(), entity);
     }
 }
