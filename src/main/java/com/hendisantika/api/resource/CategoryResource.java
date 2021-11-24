@@ -11,7 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
  * Date: 23/11/21
  * Time: 08.26
  */
-public class CategoryResource extends RepresentationModel {
+public class CategoryResource extends RepresentationModel<CategoryResource> {
 
     private final String name;
 
