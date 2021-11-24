@@ -44,7 +44,7 @@ public class CategorySubcategoriesController {
         // Getting all categories in application...
         final Set<Category> subcategories = parent.getChildCategories();
 
-        return ResponseEntity.ok(categoryResourceAssembler.toModel(subcategories));
+        return ResponseEntity.ok(categoryResourceAssembler.toCollectionModel(subcategories));
     }
 
     @PostMapping(path = "/{childid}")

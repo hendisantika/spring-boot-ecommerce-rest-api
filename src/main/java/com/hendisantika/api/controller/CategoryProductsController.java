@@ -12,11 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -77,7 +77,7 @@ public class CategoryProductsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productResourceAssembler.toModel(product));
     }
 
-    @RequestMapping(path = "/{productid}", method = RequestMethod.DELETE)
+    @DeleteMapping(path = "/{productid}")
     public ResponseEntity<?> removeProduct(@PathVariable Long categoryid, @PathVariable Long productid) {
         // Getting the requiring category; or throwing exception if not found
         final Category category = categoryService.getCategoryById(categoryid)

@@ -44,7 +44,7 @@ public class CategoryController {
         // Getting all categories in application...
         final List<Category> categories = categoryService.getAllCategories();
 
-        return ResponseEntity.ok(categoryResourceAssembler.toResources(categories));
+        return ResponseEntity.ok(categoryResourceAssembler.toCollectionModel(categories));
     }
 
     @GetMapping(path = "/{id}")
@@ -53,7 +53,7 @@ public class CategoryController {
         final Category category = categoryService.getCategoryById(id)
                 .orElseThrow(() -> new NotFoundException("category"));
 
-        return ResponseEntity.ok(categoryResourceAssembler.toResource(category));
+        return ResponseEntity.ok(categoryResourceAssembler.toModel(category));
     }
 
     @PostMapping
@@ -61,7 +61,7 @@ public class CategoryController {
         // Creating a new category in the application...
         final Category category = categoryService.createCategory(request.getName());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryResourceAssembler.toResource(category));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryResourceAssembler.toModel(category));
     }
 
     @PutMapping(path = "/{id}")
@@ -73,7 +73,7 @@ public class CategoryController {
         // Updating a category in the application...
         categoryService.updateCategory(category, request.getName());
 
-        return ResponseEntity.ok(categoryResourceAssembler.toResource(category));
+        return ResponseEntity.ok(categoryResourceAssembler.toModel(category));
     }
 
     @DeleteMapping(path = "/{id}")
